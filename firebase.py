@@ -2,10 +2,17 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
+
+
+
 cred = credentials.Certificate("swingbat-bdb0a-firebase-adminsdk-4ug1i-289382d2da.json")
 
 app = firebase_admin.initialize_app(cred)
 db = firestore.client()
+
+
+
+
 
 
 
@@ -37,3 +44,11 @@ def delete_collection(coll_ref, batch_size):
 
     if deleted >= batch_size:
         return delete_collection(coll_ref, batch_size)
+
+
+def save_general(general_info: dict):
+    doc_ref = db.collection("general").document("general")
+    doc_ref.set(general_info)
+
+def get_general():
+    pass
