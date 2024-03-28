@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import request
-from upload_highscore import add_highscore
+from firebase import add_highscore
 app = Flask(__name__)
 
 
