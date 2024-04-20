@@ -11,11 +11,6 @@ app = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
-
-
-
-
-
 def add_highscore(uid, highscore, skin, name):
     print("adding highscore")
     doc_ref = db.collection("weekly_scores").document(uid)
@@ -26,10 +21,31 @@ def add_highscore(uid, highscore, skin, name):
     })
     pass
 
+def read_top100():
+    scores = db.collection("weekly_scores").order_by("highscore", direction=firestore.Query.DESCENDING).limit(10).stream()
+    rank = 1
+    ranked_doc = {"doc": []}
+    for score in scores:
+        ranked_doc["doc"].append(score.to_dict())
+
+    return ranked_doc
+
+def read_rank(uid):
+    scores = db.collection("weekly_scores").order_by("highscore", direction=firestore.Query.DESCENDING).get()
+    rank = 1
+    for score in scores:
+        if(score.id == uid):
+            return {"status": 1, "message": "successful", "rank": rank, "highscore" : score.to_dict()["highscore"]}
+        rank += 1
+
+    return {"status": -1, "message": "no player"}
+
 def reset_leaderboard():
-    doc_ref = db.collection("weekly_scores")
+    collect_ref = db.collection("weekly_scores")
+    delete_collection(collect_ref)
 
 
+#Function copied from the firebase document website lol :D
 def delete_collection(coll_ref, batch_size):
     if batch_size == 0:
         return
@@ -52,3 +68,7 @@ def save_general(general_info: dict):
 
 def get_general():
     pass
+
+
+if(__name__ == "__main__"):
+    print(read_top100())

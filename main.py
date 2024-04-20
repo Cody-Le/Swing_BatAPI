@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import request
-from firebase import add_highscore
+from firebase import add_highscore, read_top100, read_rank
 app = Flask(__name__)
 
 
@@ -19,6 +19,17 @@ def upload_highscore():
     add_highscore(form["uid_token"], form["highscore"], form["skin"], form["name"])
 
     return {"status": "upload successfully"}
+
+@app.route("/topscores", methods=["GET"])
+def get_top_scores():
+    return read_top100()
+
+@app.route("/get_rank", methods=["GET"])
+def get_rank():
+    args = request.args
+    return 0
+
+
 
 #Check for form contains all the neccesary keys
 def check_form_valid(form : dict) -> bool:
