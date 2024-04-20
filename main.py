@@ -27,7 +27,9 @@ def get_top_scores():
 @app.route("/get_rank", methods=["GET"])
 def get_rank():
     args = request.args
-    return 0
+    if("uid" in args.keys()):
+        return read_rank(args["uid"])
+    return {"status": -1, "message": "invalid request"}
 
 
 
